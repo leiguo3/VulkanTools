@@ -212,12 +212,23 @@ spoof_LayerSpoofEXT(VkPhysicalDevice physicalDevice) {
     return VK_SUCCESS;
 }
 
-//VKAPI_ATTR VkVoid VKAPI_CALL
-//spoof_GetOriginalPhysicalDeviceLimitsEXT(VkPhysicalDevice physicalDevice, VkPhysicalDeviceLimits *orgLimits) {
-//VKAPI_ATTR VkVoid VKAPI_CALL
-//spoof_ResetPhysicalDeviceLimitsEXT(VkPhysicalDevice physicalDevice) {
+VKAPI_ATTR void VKAPI_CALL
+spoof_GetOriginalPhysicalDeviceLimitsEXT(VkPhysicalDevice physicalDevice, VkPhysicalDeviceLimits *orgLimits) {
+	//unwrapping the physicalDevice in order to get the same physicalDevice address which loader wraps
+	//this part will be carried into loader in the future
+	VkPhysicalDevice unwrapped_phys_dev = loader_unwrap_physical_device(physicalDevice);
+	printf("VK_LAYER_LUNARG_Spoof: ARDA2 In vkSetDeviceLimitsEXT() call w/ gpu: %p\n", (void *)physicalDevice);
+	printf("VK_LAYER_LUNARG_Spoof: ARDA2 In vkSetDeviceLimitsEXT() call w/ gpu: unwrap %p\n", (void *)unwrapped_phys_dev);
+	{
+		std::lock_guard<std::mutex> lock(global_lock);
 
+		VkPhysicalDeviceProperties pImplicitProperties;
+		instance_dispatch_table(unwrapped_phys_dev)->GetPhysicalDeviceProperties(unwrapped_phys_dev, &pImplicitProperties);
 
+		if (orgLimits)
+			memcpy(orgLimits, &pImplicitProperties.limits, sizeof(VkPhysicalDeviceLimits));
+	}
+}
 
 VKAPI_ATTR VkResult VKAPI_CALL
 spoof_SetPhysicalDeviceLimitsEXT(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceLimits *newLimits) {
@@ -410,7 +421,7 @@ spoof_GetPhysicalDeviceProperties( VkPhysicalDevice physicalDevice, VkPhysicalDe
 				memcpy(spoof_dev_data_map[physicalDevice].props, pProperties, sizeof(VkPhysicalDeviceProperties));
 			}
 			else {
-				printf(" Out of Memoery \n");
+				printf(" Out of Memory \n");
 			}
         }
         else{ //spoof layer device limits exists for this device so overwrite wiht desired limits
