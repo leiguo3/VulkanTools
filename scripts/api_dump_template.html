@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Vulkan API dump</title>
+        <style type='text/css'>
+        body {
+            font-family: Consolas, monaco, monospace;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+            overflow: scroll;
+        }
+        details>details {
+            margin-left: 22px;
+        }
+        details>div {
+            margin-left: 37px;
+        }
+        .var, .type, .val {
+            display: inline;
+        }
+        .var {
+        }
+        .type {
+            font-weight: bold;
+            margin: 0 12px;
+        }
+        .val {
+            color: #222;
+            background: #ddd;
+            text-align: right;
+        }
+        </style>
+    </head>
+    <body>
+        <details><summary>Frame 0</summary>
+            <details><summary>Thread 0</summary>
+                <details class='fn'><summary><div class='var'>vkCreateInstance(pCreateInfo, pAllocator, pInstance)</div><div class='type'>VkResult</div><div class='val'>VK_SUCCESS (0)</div></summary>
+                    <details class='data'><summary><div class='var'>pCreateInfo</div><div class='type'>const VkInstanceCreateInfo*</div><div class='val'>000000B75F75EF00</div></summary>
+                        <div class='data'><div class='var'>sType</div><div class='type'>VkStructureType</div><div class='val'>VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO (1)</div></div>
+                        <div class='data'><div class='var'>pNext</div><div class='type'>const void*</div><div class='val'>000000B75F75EFE8</div></div>
+                        <div class='data'><div class='var'>flags</div><div class='type'>VkInstanceCreateFlags</div><div class='val'>0</div></div>
+                        <details class='data'><summary><div class='var'>pApplicationInfo</div><div class='type'>const VkApplicationInfo*</div><div class='val'>000000B75F85F258</div></summary>
+                            <div class='data'><div class='var'>sType</div><div class='type'>VkStructureType</div><div class='val'>VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO (1)</div></div>
+                        <div class='data'><div class='var'>pNext</div><div class='type'>const void*</div><div class='val'>000000B75F75EFE8</div></div>
+                        </details>
+                    </details>
+                    <div class='data'><div class='var'>pAllocator</div><div class='type'>const VkAllocationCallbacks*</div><div class='val'>NULL</div></div>
+                    <div class='data'><div class='var'>pInstance</div><div class='type'>const VkInstance*</div><div class='val'>0000022C914539E0</div></div>
+                </details>
+                <details class='fn'><summary><div class='var'>vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices)</div><div class='type'>VkResult</div><div class='val'>V_SUCCESS (0)</div></summary>
+                </details>
+            </details>
+        </details>
+        <details><summary>Frame 1</summary>
+            <div>2.1 Item</div>
+            <div>2.2 Item</div>
+        </details>
+        <details><summary>Frame 2</summary>
+            <div>3.1 Item</div>
+        </details>
+    </body>
+</html>

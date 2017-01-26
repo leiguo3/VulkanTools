@@ -41,6 +41,7 @@
 
 enum class ApiDumpFormat {
     Text,
+    Html,
 };
 
 class ApiDumpSettings {
@@ -62,7 +63,7 @@ class ApiDumpSettings {
             use_cout = true;
         }
         
-        output_format = ApiDumpFormat::Text;
+        output_format = ApiDumpFormat::Html;
 
         // Get the remaining settings
         show_params = readBoolOption("lunarg_api_dump.detailed", true);
@@ -75,9 +76,54 @@ class ApiDumpSettings {
         type_size = std::max(readIntOption("lunarg_api_dump.type_size", 0), 0);
         use_spaces = readBoolOption("lunarg_api_dump.use_spaces", true);
         show_shader = readBoolOption("lunarg_api_dump.show_shader", false);
+        
+        if (output_format == ApiDumpFormat::Html) {
+        // Insert html heading
+        stream() << "<!doctype html>"
+                    "<html>"
+                        "<head>"
+                            "<title>Vulkan API dump</title>"
+                            "<style type='text/css'>"
+                            "body {"
+                                "font-family: Consolas, monaco, monospace;"
+                                "font-size: 14px;"
+                                "font-style: normal;"
+                                "font-variant: normal;"
+                                "font-weight: 400;"
+                                "line-height: 20px;"
+                                "overflow: scroll;"
+                            "}"
+                            "details>details {"
+                                "margin-left: 22px;"
+                            "}"
+                            "details>div {"
+                                "margin-left: 37px;"
+                            "}"
+                            ".var, .type, .val {"
+                                "display: inline;"
+                            "}"
+                            ".var {"
+                            "}"
+                            ".type {"
+                                "font-weight: bold;"
+                                "margin: 0 12px;"
+                            "}"
+                            ".val {"
+                                "color: #222;"
+                                "background: #ddd;"
+                                "text-align: right;"
+                            "}"
+                            "</style>"
+                        "</head>"
+                        "<body>";
+        }
     }
 
     ~ApiDumpSettings() {
+        if (output_format == ApiDumpFormat::Html) {
+            // Close off html
+            stream() << "</body></html>";
+        }
         if (!use_cout)
             output_stream.close();
     }
@@ -374,6 +420,12 @@ inline std::ostream &dump_text_cstring(const char *object,
         return settings.stream() << "\"" << object << "\"";
 }
 
+inline std::ostream &dump_html_cstring(const char *object,
+                                       const ApiDumpSettings &settings,
+                                       int indents) {
+    return dump_text_cstring(object, settings, indents);
+}
+
 inline std::ostream &dump_text_void(const void *object,
                                     const ApiDumpSettings &settings,
                                     int indents) {
@@ -383,4 +435,10 @@ inline std::ostream &dump_text_void(const void *object,
         return settings.stream() << object;
     else
         return settings.stream() << "address";
+}
+
+inline std::ostream &dump_html_void(const void *object,
+                                    const ApiDumpSettings &settings,
+                                    int indents) {
+    return dump_text_void(object, settings, indents);
 }

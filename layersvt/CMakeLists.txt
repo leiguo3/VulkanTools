@@ -34,6 +34,7 @@ endif()
 
 add_custom_target( generate_api_cpp DEPENDS api_dump.cpp )
 add_custom_target( generate_api_h DEPENDS api_dump_text.h )
+add_custom_target( generate_api_html_h DEPENDS api_dump_html.h )
 
 set(LAYER_JSON_FILES
     VkLayer_api_dump
@@ -90,13 +91,13 @@ if (WIN32)
     )
     add_library(VkLayer_${target} SHARED ${ARGN} VkLayer_${target}.def)
     target_link_Libraries(VkLayer_${target} VkLayer_utilsvt)
-    add_dependencies(VkLayer_${target} generate_helper_files generate_api_cpp generate_api_h)
+    add_dependencies(VkLayer_${target} generate_helper_files generate_api_cpp generate_api_h generate_api_html_h)
     endmacro()
 else()
     macro(add_vk_layer target)
     add_library(VkLayer_${target} SHARED ${ARGN})
     target_link_Libraries(VkLayer_${target} VkLayer_utilsvt)
-    add_dependencies(VkLayer_${target} generate_helper_files generate_api_cpp generate_api_h)
+    add_dependencies(VkLayer_${target} generate_helper_files generate_api_cpp generate_api_h generate_api_html_h)
     set_target_properties(VkLayer_${target} PROPERTIES LINK_FLAGS "-Wl,-Bsymbolic")
     install(TARGETS VkLayer_${target} DESTINATION ${PROJECT_BINARY_DIR}/install_staging)
     endmacro()
@@ -137,6 +138,7 @@ endif()
 #VulkanTools layers
 run_vk_xml_generate(api_dump_generator.py api_dump.cpp)
 run_vk_xml_generate(api_dump_generator.py api_dump_text.h)
+run_vk_xml_generate(api_dump_generator.py api_dump_html.h)
 
 # Layer Utils Library
 # For Windows, we use a static lib because the Windows loader has a fairly restrictive loader search
